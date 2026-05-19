@@ -17,4 +17,4 @@ body { background: #0A0F1E; color: #E2E8F0; font-family: 'Space Grotesk', sans-s
 
 /* Leaflet overrides */
 .leaflet-container { background: #0A0F1E !important; }
-.leaflet-tile-pane { filter: brightness(0.7) saturate(0.8) hue-rotate(180deg); }
+.leaflet-tile-pane { filter: brightness(0.4) saturate(0.3); }

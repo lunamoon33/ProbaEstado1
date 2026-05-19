@@ -10,7 +10,7 @@ export function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-civic-border">
-      <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-2 h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-7 h-7 rounded bg-civic-accent/20 border border-civic-accent/40 flex items-center justify-center">
             <ShieldCheck size={14} className="text-civic-accent" />
@@ -20,7 +20,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-5 text-sm font-medium">
+        <div className="flex items-center gap-4 text-sm font-medium">
           <Link to="/" className={active("/")}>
             <span className="flex items-center gap-1.5"><MapPin size={13} />Mapa</span>
           </Link>
