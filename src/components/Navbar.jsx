@@ -6,8 +6,8 @@ export function Navbar() {
   const active = (path) => loc.pathname === path ? "text-civic-accent border-b border-civic-accent pb-0.5" : "text-civic-muted hover:text-civic-text transition-colors";
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-civic-border">
-      <div className="max-w-7xl mx-auto pl-0 pr-4 h-14 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+      <div className="w-full px-0 h-14 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2 ml-2">
           <div className="w-7 h-7 rounded bg-civic-accent/20 border border-civic-accent/40 flex items-center justify-center">
             <ShieldCheck size={14} className="text-civic-accent" />
           </div>
