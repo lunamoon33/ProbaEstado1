@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* { box-sizing: border-box; }
+body { background: #0A0F1E; color: #E2E8F0; font-family: 'Space Grotesk', sans-serif; margin: 0; }
+
+.badge-urgente { background: rgba(255,59,92,0.15); color: #FF3B5C; border: 1px solid rgba(255,59,92,0.3); }
+.badge-revision { background: rgba(255,184,0,0.15); color: #FFB800; border: 1px solid rgba(255,184,0,0.3); }
+.badge-validado { background: rgba(0,255,136,0.12); color: #00FF88; border: 1px solid rgba(0,255,136,0.3); }
+.badge-pendiente { background: rgba(100,116,139,0.2); color: #94A3B8; border: 1px solid rgba(100,116,139,0.3); }
+
+.glass { background: rgba(21,30,48,0.8); backdrop-filter: blur(12px); border: 1px solid #1E2D45; }
+.glow-accent { box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+.glow-green { box-shadow: 0 0 20px rgba(0,255,136,0.15); }
+
+/* Leaflet overrides */
+.leaflet-container { background: #0A0F1E !important; }
+.leaflet-tile-pane { filter: brightness(0.7) saturate(0.8) hue-rotate(180deg); }
