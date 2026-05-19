@@ -17,4 +17,4 @@ body { background: #0A0F1E; color: #E2E8F0; font-family: 'Space Grotesk', sans-s
 
 /* Leaflet overrides */
 .leaflet-container { background: #0A0F1E !important; }
-.leaflet-tile-pane { filter: brightness(0.4) saturate(0.3); }
+.leaflet-tile-pane { filter: brightness(0.6) saturate(0.5) hue-rotate(200deg); }git add . && git commit -m "fix: mapa color original + logo izquierda" && git push
