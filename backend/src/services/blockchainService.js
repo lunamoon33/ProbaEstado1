@@ -4,8 +4,8 @@ import { reportContract } from '../config/blockchain.js';
 export const registerHashInBlockchain = async (reportHash) => {
   try {
     const tx = await reportContract.registerReportHash(reportHash, {
-      gasLimit: 600000,
-      gasPrice: ethers.parseUnits('100', 'gwei')
+      gasLimit: 200000,
+      gasPrice: ethers.parseUnits('1', 'gwei')
     });
     await tx.wait(1);
     const txUrl = `https://explorer-zk.tanenbaum.io/tx/${tx.hash}`;
