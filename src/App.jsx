@@ -31,6 +31,9 @@ export default function App() {
                 <Route path="/" element={<MapaPage />} />
                 <Route path="/reporte/:id" element={<ReportePage />} />
                 <Route path="/municipio" element={<MunicipioPage />} />
+                import { ReportarPage } from "./pages/ReportarPage.jsx";
+// ...
+<Route path="/reportar" element={<ReportarPage />} />
                 <Route path="/monitoreo" element={<MonitoreoPage />} />
                 <Route path="/ciudadano" element={<Protegida><CiudadanoPage /></Protegida>} />
                 <Route path="/institucional" element={<Protegida><InstitucionalPage /></Protegida>} />
@@ -42,3 +45,5 @@ export default function App() {
     </BrowserRouter>
   );
 }
+import { ReportarPage } from "./pages/ReportarPage.jsx";
+// ...

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { MapPin, LayoutDashboard, Rss, User, Building2, ShieldCheck, LogIn } from "lucide-react";
+import { MapPin, LayoutDashboard, Rss, User, Building2, ShieldCheck, LogIn, PlusCircle } from "lucide-react";
 
 export function Navbar() {
   const loc = useLocation();
@@ -15,6 +15,9 @@ export function Navbar() {
         </Link>
         <div className="flex items-center gap-4 text-sm font-medium">
           <Link to="/" className={active("/")}><span className="flex items-center gap-1.5"><MapPin size={13} />Mapa</span></Link>
+          <Link to="/reportar" className={active("/reportar")}>
+  <span className="flex items-center gap-1.5"><PlusCircle size={13} />Reportar</span>
+</Link>
           <Link to="/monitoreo" className={active("/monitoreo")}><span className="flex items-center gap-1.5"><Rss size={13} />Monitoreo</span></Link>
           <Link to="/municipio" className={active("/municipio")}><span className="flex items-center gap-1.5"><LayoutDashboard size={13} />Dashboard</span></Link>
           <Link to="/ciudadano" className={active("/ciudadano")}><span className="flex items-center gap-1.5"><User size={13} />Mi perfil</span></Link>
