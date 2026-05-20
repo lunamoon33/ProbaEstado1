@@ -1,5 +1,5 @@
 // TODO: cambiar USE_MOCK a false cuando el backend esté listo
-const USE_MOCK = true;
+const USE_MOCK = false;
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 import { REPORTES_MOCK } from "../data/mock.js";
