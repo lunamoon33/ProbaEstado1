@@ -7,24 +7,14 @@ import { REPORTES_MOCK } from "../data/mock.js";
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export const api = {
-  async getReportes(params = {}) {
-    if (USE_MOCK) {
-      await delay(400);
-      return { data: REPORTES_MOCK };
-    }
+async getReportes(params = {}) {
     const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`${BASE_URL}/api/v1/reportes?${qs}`);
+    const res = await fetch(`${BASE_URL}/api/reports?${qs}`);
     return res.json();
   },
 
   async getReporte(id) {
-    if (USE_MOCK) {
-      await delay(300);
-      const r = REPORTES_MOCK.find((r) => r.id === id);
-      if (!r) throw new Error("Reporte no encontrado");
-      return { data: r };
-    }
-    const res = await fetch(`${BASE_URL}/api/v1/reportes/${id}`);
+    const res = await fetch(`${BASE_URL}/api/reports/${id}`);
     return res.json();
   },
 
