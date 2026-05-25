@@ -2,7 +2,7 @@ import { REPORTES_MOCK } from "../data/mock.js";
 
 // Cambia a false cuando el backend esté listo
 // Si es false pero el backend falla, igual cae al mock automáticamente
-const USE_MOCK = false;
+const USE_MOCK = true;
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
