@@ -14,11 +14,12 @@ export function ReporteCard({ reporte }) {
       className="block bg-civic-card border border-civic-border rounded-xl overflow-hidden hover:border-civic-accent/40 transition-all hover:glow-accent group"
     >
       <div className="relative h-40 overflow-hidden">
-        <img
-          src={reporte.imagen_url}
-          alt="evidencia"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
+<img
+  src={reporte.imagen_url || `https://picsum.photos/seed/${reporte.id}/600/400`}
+  alt="evidencia"
+  onError={(e) => { e.target.src = `https://picsum.photos/seed/${reporte.id}/600/400`; }}
+  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+/>
         <div className="absolute inset-0 bg-gradient-to-t from-civic-card to-transparent" />
         <span
           className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full ${status.badgeClass}`}

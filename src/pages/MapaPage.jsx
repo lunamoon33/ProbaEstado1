@@ -15,12 +15,15 @@ export function MapaPage() {
   const [filtro, setFiltro] = useState("Todos");
 
   useEffect(() => {
-    api.getReportes().then(({ data }) => {
-      setReportes(data);
-      setLoading(false);
-    });
-  }, []);
-
+api.getReportes()
+  .then(({ data }) => {
+    setReportes(Array.isArray(data) ? data : []);
+    setLoading(false);
+  })
+  .catch(() => {
+    setReportes([]);
+    setLoading(false);
+  });
   const filtrados = filtro === "Todos"
     ? reportes
     : reportes.filter((r) => r.ia_categoria === filtro);

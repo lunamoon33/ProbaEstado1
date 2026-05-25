@@ -10,11 +10,15 @@ export function MunicipioPage() {
   const [filtroStatus, setFiltroStatus] = useState("todos");
 
   useEffect(() => {
-    api.getReportes().then(({ data }) => {
-      setReportes(data);
-      setLoading(false);
-    });
-  }, []);
+api.getReportes()
+  .then(({ data }) => {
+    setReportes(Array.isArray(data) ? data : []);
+    setLoading(false);
+  })
+  .catch(() => {
+    setReportes([]);
+    setLoading(false);
+  });
 
   const stats = {
     total: reportes.length,
