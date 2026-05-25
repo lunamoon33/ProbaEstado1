@@ -10,15 +10,16 @@ export function MunicipioPage() {
   const [filtroStatus, setFiltroStatus] = useState("todos");
 
   useEffect(() => {
-api.getReportes()
-  .then(({ data }) => {
-    setReportes(Array.isArray(data) ? data : []);
-    setLoading(false);
-  })
-  .catch(() => {
-    setReportes([]);
-    setLoading(false);
-  });
+    api.getReportes()
+      .then(({ data }) => {
+        setReportes(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setReportes([]);
+        setLoading(false);
+      });
+  }, []);
 
   const stats = {
     total: reportes.length,
@@ -86,7 +87,7 @@ api.getReportes()
             <h3 className="text-sm font-semibold text-civic-text mb-4">Por categoría</h3>
             <div className="space-y-3">
               {Object.entries(categoriaCount).map(([cat, count]) => {
-                const pct = Math.round((count / stats.total) * 100);
+                const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
                 return (
                   <div key={cat}>
                     <div className="flex justify-between text-xs mb-1">
@@ -127,29 +128,33 @@ api.getReportes()
             </div>
 
             <div className="space-y-2">
-              {filtrados.map(r => {
-                const status = getStatusInfo(r);
-                const fecha = new Date(r.created_at).toLocaleDateString("es-PE", {
-                  day: "numeric", month: "short"
-                });
-                return (
-                  <Link
-                    key={r.id}
-                    to={`/reporte/${r.id}`}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-civic-bg hover:bg-civic-surface transition-colors border border-transparent hover:border-civic-border"
-                  >
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: status.color }} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-civic-text truncate">{r.descripcion}</p>
-                      <p className="text-xs text-civic-muted">{r.ia_categoria}</p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-xs font-mono text-civic-muted">{r.ia_confianza}%</p>
-                      <p className="text-xs text-civic-muted">{fecha}</p>
-                    </div>
-                  </Link>
-                );
-              })}
+              {filtrados.length === 0 ? (
+                <p className="text-civic-muted text-sm text-center py-6">No hay reportes</p>
+              ) : (
+                filtrados.map(r => {
+                  const status = getStatusInfo(r);
+                  const fecha = new Date(r.created_at).toLocaleDateString("es-PE", {
+                    day: "numeric", month: "short"
+                  });
+                  return (
+                    <Link
+                      key={r.id}
+                      to={`/reporte/${r.id}`}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-civic-bg hover:bg-civic-surface transition-colors border border-transparent hover:border-civic-border"
+                    >
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: status.color }} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-civic-text truncate">{r.descripcion}</p>
+                        <p className="text-xs text-civic-muted">{r.ia_categoria}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-xs font-mono text-civic-muted">{r.ia_confianza}%</p>
+                        <p className="text-xs text-civic-muted">{fecha}</p>
+                      </div>
+                    </Link>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
