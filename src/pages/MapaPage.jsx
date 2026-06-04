@@ -99,7 +99,7 @@ export function MapaPage() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://openstreetmap.org">OSM</a>'
           />
-          {filtrados.map((r) => {
+          {filtrados.filter(r => r.lat && r.lng).map((r) => {
             const status = getStatusInfo(r);
             return (
               <CircleMarker

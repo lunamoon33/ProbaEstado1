@@ -29,7 +29,16 @@ const reportSchema = new mongoose.Schema(
   },
   {
     timestamps: { createdAt: true, updatedAt: false }
-  }
+ },
+  
+  lat: {
+  type: Number,
+  default: null
+},
+lng: {
+  type: Number,
+  default: null
+}
 );
 
 const Report = mongoose.model('Report', reportSchema);
