@@ -36,8 +36,10 @@ export const api = {
     try {
       const qs = new URLSearchParams(params).toString();
       const res = await fetch(`${BASE_URL}/api/reports?${qs}`);
-      if (!res.ok) throw new Error("Backend no disponible");
-      return res.json();
+if (!res.ok) throw new Error("Backend no disponible");
+const json = await res.json();
+if (json.data) json.data = json.data.map(r => ({ ...r, id: r._id }));
+return json;
     } catch {
       // Fallback automático al mock si el backend falla
       await delay(300);
@@ -53,9 +55,11 @@ export const api = {
       return { data: r };
     }
     try {
-      const res = await fetch(`${BASE_URL}/api/reports/${id}`);
-      if (!res.ok) throw new Error("Backend no disponible");
-      return res.json();
+     const res = await fetch(`${BASE_URL}/api/reports/${id}`);
+if (!res.ok) throw new Error("Backend no disponible");
+const json = await res.json();
+if (json.data) json.data = { ...json.data, id: json.data._id };
+return json;
     } catch {
       // Fallback al mock
       await delay(300);
