@@ -32,3 +32,9 @@ npm run dev
 - zkSYS Testnet = zkTanenbaum
 - Chain ID: 57057
 - Explorer: https://explorer-zk.tanenbaum.io
+
+echo 'MIT License
+
+Copyright (c) 2026 ProbaEstado
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software.' >> README.md && git add . && git commit -m "docs: licencia MIT" && git push
