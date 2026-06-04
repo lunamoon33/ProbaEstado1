@@ -30,6 +30,8 @@ export function MapaPage() {
     ? reportes
     : reportes.filter((r) => r.ia_categoria === filtro);
 
+  const conCoordenadas = filtrados.filter(r => r.lat && r.lng);
+
   return (
     <div className="pt-14 flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -42,7 +44,6 @@ export function MapaPage() {
             </h2>
           </div>
 
-          {/* Filtros */}
           <div className="flex flex-wrap gap-1.5">
             {CATEGORIAS.map((cat) => (
               <button
@@ -60,7 +61,6 @@ export function MapaPage() {
           </div>
         </div>
 
-        {/* Leyenda */}
         <div className="px-4 py-2 border-b border-civic-border flex gap-4">
           <span className="flex items-center gap-1.5 text-xs text-civic-muted">
             <span className="w-2 h-2 rounded-full bg-[#FF3B5C]" /> Urgente
@@ -73,7 +73,6 @@ export function MapaPage() {
           </span>
         </div>
 
-        {/* Lista */}
         <div className="flex-1 overflow-y-auto p-3 space-y-3">
           {loading ? (
             <div className="flex items-center justify-center py-12">
@@ -82,7 +81,7 @@ export function MapaPage() {
           ) : filtrados.length === 0 ? (
             <p className="text-civic-muted text-sm text-center py-8">No hay reportes con ese filtro</p>
           ) : (
-            filtrados.map((r) => <ReporteCard key={r.id} reporte={r} />)
+            filtrados.map((r, i) => <ReporteCard key={r._id || i} reporte={r} />)
           )}
         </div>
       </aside>
@@ -99,11 +98,11 @@ export function MapaPage() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://openstreetmap.org">OSM</a>'
           />
-          {filtrados.filter(r => r.lat && r.lng).map((r) => {
+          {conCoordenadas.map((r, i) => {
             const status = getStatusInfo(r);
             return (
               <CircleMarker
-                key={r.id}
+                key={r._id || i}
                 center={[r.lat, r.lng]}
                 radius={10}
                 pathOptions={{
@@ -118,10 +117,10 @@ export function MapaPage() {
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${status.badgeClass}`}>
                       {status.label}
                     </span>
-                    <p className="text-xs text-civic-text mt-2 mb-1">{r.descripcion}</p>
-                    <p className="text-xs text-civic-muted mb-2">{r.ia_categoria} · IA {r.ia_confianza}%</p>
+                    <p className="text-xs text-civic-text mt-2 mb-1">{r.description || r.descripcion}</p>
+                    <p className="text-xs text-civic-muted mb-2">{r.category || r.ia_categoria}</p>
                     <Link
-                      to={`/reporte/${r.id}`}
+                      to={`/reporte/${r._id || r.id}`}
                       className="text-xs text-civic-accent hover:underline flex items-center gap-1"
                     >
                       <MapPin size={10} /> Ver detalle
@@ -133,12 +132,11 @@ export function MapaPage() {
           })}
         </MapContainer>
 
-        {/* Stats flotantes */}
         <div className="absolute bottom-4 right-4 z-[1000] flex gap-2">
           {[
             { label: "Total", val: reportes.length, color: "text-civic-text" },
-            { label: "Urgentes", val: reportes.filter(r => r.ia_confianza >= 85 && r.status !== "validado").length, color: "text-[#FF3B5C]" },
-            { label: "Validados", val: reportes.filter(r => r.status === "validado").length, color: "text-civic-green" },
+            { label: "Urgentes", val: reportes.filter(r => r.status === "pending").length, color: "text-[#FF3B5C]" },
+            { label: "Validados", val: reportes.filter(r => r.status === "verified").length, color: "text-civic-green" },
           ].map(({ label, val, color }) => (
             <div key={label} className="glass rounded-lg px-3 py-2 text-center min-w-[70px]">
               <p className={`text-lg font-bold font-mono ${color}`}>{val}</p>
