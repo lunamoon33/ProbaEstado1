@@ -1,7 +1,8 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import { analyzeReport } from './aiService.js';
 import { registerHashInBlockchain } from './blockchainService.js';
-import crypto from 'crypto'; // Módulo nativo de Node.js para generar el hash
+import Report from '../models/report.model.js'; // ajusta la ruta si es diferente
+import crypto from 'crypto';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -25,7 +26,6 @@ client.on('messageCreate', async (message) => {
     return message.reply('pong');
   }
 
-  // Comando integrado: !reportar Título | Descripción
   if (message.content.startsWith('!reportar ')) {
     const args = message.content.slice(10).trim();
     const parts = args.split('|');
@@ -33,24 +33,39 @@ client.on('messageCreate', async (message) => {
     const description = parts[1]?.trim();
 
     if (!title || !description) {
-      return message.reply('❌ Formato incorrecto. Usa: \`!reportar Título | Descripción detallada\`');
+      return message.reply('❌ Formato incorrecto. Usa: `!reportar Título | Descripción detallada`');
     }
 
-    // 1. Efecto de carga en Discord
     await message.channel.sendTyping();
 
     try {
-      // 2. Ejecutar análisis del reporte con el Agente de IA
+      // 1. Análisis IA
       const analysis = await analyzeReport(title, description);
 
-      // 3. Crear un Hash criptográfico único basado en el contenido del reporte
+      // 2. Hash criptográfico
       const reportString = `${title}-${analysis.category}-${analysis.priority}`;
       const reportHash = crypto.createHash('md5').update(reportString).digest('hex');
 
-      // 4. Registrar de forma inmutable en el Smart Contract (zkSYS Blockchain)
+      // 3. Registrar en blockchain
       const txHash = await registerHashInBlockchain(reportHash);
 
-      // 5. Construir y enviar la respuesta final estructurada al usuario
+      // 4. Guardar en MongoDB para que aparezca en el mapa
+      await Report.create({
+        title,
+        descripcion: description,
+        pseudonimo: message.author.username,
+        fuente: 'discord',
+        ia_categoria: analysis.category,
+        ia_prioridad: analysis.priority,
+        ia_resumen: analysis.summary,
+        ia_valido: true,
+        hash: reportHash,
+        blockchainHash: txHash,
+        status: 'verified',
+        created_at: new Date(),
+      });
+
+      // 5. Respuesta en Discord
       const responseMessage = [
         `📊 **REPORTE CIUDADANO PROCESADO CON ÉXITO**`,
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
@@ -60,8 +75,9 @@ client.on('messageCreate', async (message) => {
         `📝 **Resumen de IA:** ${analysis.summary}`,
         `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
         `⛓️ **HASH DEL REPORTE (ID):** \`${reportHash}\``,
-        `🚀 **BLOCKCHAIN TX HASH:** [\`${txHash}\`](https://tanenbaum.io)`, // Enlace al explorador de la red
-        `✅ _Registrado de forma transparente e inmutable en zkSYS Testnet._`
+        `🚀 **BLOCKCHAIN TX HASH:** [\`${txHash}\`](https://tanenbaum.io)`,
+        `✅ _Registrado de forma transparente e inmutable en zkSYS Testnet._`,
+        `🗺️ _Ya visible en el mapa de ProbaEstado._`
       ].join('\n');
 
       await message.reply(responseMessage);
