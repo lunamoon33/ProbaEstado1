@@ -28,7 +28,7 @@ export function MapaPage() {
 
   const filtrados = filtro === "Todos"
     ? reportes
-    : reportes.filter((r) => r.ia_categoria === filtro);
+    : reportes.filter((r) => (r.ia_categoria || r.category) === filtro);
 
   const conCoordenadas = filtrados.filter(r => r.lat != null && r.lng != null && typeof r.lat === 'number' && typeof r.lng === 'number');
 
@@ -81,7 +81,14 @@ export function MapaPage() {
           ) : filtrados.length === 0 ? (
             <p className="text-civic-muted text-sm text-center py-8">No hay reportes con ese filtro</p>
           ) : (
-            filtrados.map((r, i) => <ReporteCard key={r._id || i} reporte={r} />)
+            filtrados.map((r, i) => <ReporteCard key={r.id || r._id} reporte={{
+  ...r,
+  id: r.id || r._id,
+  descripcion: r.descripcion || r.description || r.title,
+  ia_categoria: r.ia_categoria || r.category || "otro",
+  ia_confianza: r.ia_confianza || 70,
+  created_at: r.created_at || r.createdAt,
+}} />)
           )}
         </div>
       </aside>
