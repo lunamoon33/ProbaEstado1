@@ -4,7 +4,6 @@ const KEYWORDS = {
   delito: ['robo','asalt','crimen','asesin','delito','policial'],
   trafico: ['tráfico','tránsito','congestión','bloqueo','paro']
 };
-
 const LIMA_PALABRAS = ['lima','callao','miraflores','surco','ate','comas','chorrillos'];
 
 function parsear(text) {
@@ -28,10 +27,17 @@ function parsear(text) {
 export async function getNoticias() {
   try {
     const res = await fetch('https://probaestado1.onrender.com/api/noticias');
-    if (!res.ok) return [];
+    if (!res.ok) throw new Error();
     const text = await res.text();
     return parsear(text);
   } catch {
-    return [];
+    try {
+      const res2 = await fetch('https://api.allorigins.win/raw?url=https://rpp.pe/rss/ultimas-noticias.xml');
+      if (!res2.ok) return [];
+      const text = await res2.text();
+      return parsear(text);
+    } catch {
+      return [];
+    }
   }
 }
