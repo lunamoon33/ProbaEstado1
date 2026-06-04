@@ -1,3 +1,4 @@
+cat > backend/src/controllers/report.controller.js << 'EOF'
 import { createHash } from 'crypto';
 import Report from '../models/report.model.js';
 import { analyzeReport } from '../services/aiService.js';
@@ -46,20 +47,17 @@ export const createReport = async (req, res, next) => {
       console.error('Error en registro blockchain:', blockchainError?.message || blockchainError);
     }
 
-    const reportData = {
-      id: report._id.toString(),
-      title: report.title,
-      description: report.description,
-      category: report.category,
-      priority,
-      summary,
-      blockchainHash: blockchainHash || 'No registrado aún',
-      createdBy: report.createdBy,
-      createdAt: report.createdAt
-    };
-
     try {
-      await sendDiscordNotification(reportData);
+      await sendDiscordNotification({
+        id: report._id.toString(),
+        title: report.title,
+        description: report.description,
+        category: report.category,
+        priority,
+        summary,
+        blockchainHash: blockchainHash || 'No registrado aún',
+        createdAt: report.createdAt
+      });
     } catch (discordError) {
       console.error('Error enviando notificación a Discord:', discordError?.message || discordError);
     }
@@ -82,7 +80,7 @@ export const getAllReports = async (req, res, next) => {
 export const getReportById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const report = await Report.findById(id).populate('createdBy', 'name email role wallet');
+    const report = await Report.findById(id);
 
     if (!report) {
       return res.status(404).json({ status: 'error', message: 'Reporte no encontrado' });
@@ -93,3 +91,8 @@ export const getReportById = async (req, res, next) => {
     next(error);
   }
 };
+EOF
+
+git add backend/src/controllers/report.controller.js
+git commit -m "fix: controller limpio sin createdBy ni errores de sintaxis"
+git push
