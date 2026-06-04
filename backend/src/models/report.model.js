@@ -25,8 +25,8 @@ const reportSchema = new mongoose.Schema(
     blockchainHash: {
       type: String,
       default: null
-    },
-   
+    }
+  },
   {
     timestamps: { createdAt: true, updatedAt: false }
   }
