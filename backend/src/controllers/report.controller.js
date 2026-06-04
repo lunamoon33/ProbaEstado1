@@ -31,7 +31,6 @@ export const createReport = async (req, res, next) => {
       category,
       status: 'pending',
       blockchainHash: null,
-      createdBy: req.user.id
     });
 
     const hashSeed = `${report._id.toString()}|${Date.now()}|${title}|${description}`;
@@ -73,7 +72,7 @@ export const createReport = async (req, res, next) => {
 
 export const getAllReports = async (req, res, next) => {
   try {
-    const reports = await Report.find().populate('createdBy', 'name email role wallet');
+    const reports = await Report.find()await Report.find().sort({ createdAt: -1 });;
     return res.status(200).json({ status: 'success', data: reports });
   } catch (error) {
     next(error);
@@ -83,7 +82,7 @@ export const getAllReports = async (req, res, next) => {
 export const getReportById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const report = await Report.findById(id).populate('createdBy', 'name email role wallet');
+    const report = await Report.findById(id)await Report.find().sort({ createdAt: -1 });;
 
     if (!report) {
       return res.status(404).json({ status: 'error', message: 'Reporte no encontrado' });
