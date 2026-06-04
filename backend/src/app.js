@@ -9,6 +9,7 @@ import reportRoutes from './routes/report.routes.js';
 import auditRoutes from './routes/auditRoutes.js';
 import agentRoutes from './routes/agent.routes.js';
 import { auditErrorMiddleware } from './middleware/auditMiddleware.js';
+import fetch from 'node-fetch';
 
 const app = express();
 
