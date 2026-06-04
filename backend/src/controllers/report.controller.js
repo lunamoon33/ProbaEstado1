@@ -82,7 +82,7 @@ export const getAllReports = async (req, res, next) => {
 export const getReportById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const report = await Report.findById(id)await Report.find().sort({ createdAt: -1 });;
+    const report = await Report.findById(id).populate('createdBy', 'name email role wallet');
 
     if (!report) {
       return res.status(404).json({ status: 'error', message: 'Reporte no encontrado' });
