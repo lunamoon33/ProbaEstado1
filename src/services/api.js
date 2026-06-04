@@ -53,7 +53,7 @@ export const api = {
       return { data: r };
     }
     try {
-      const res = await fetch(`${BASE_URL}/api/reportes/${id}`);
+      const res = await fetch(`${BASE_URL}/api/reports/${id}`);
       if (!res.ok) throw new Error("Backend no disponible");
       return res.json();
     } catch {
