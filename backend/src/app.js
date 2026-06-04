@@ -35,6 +35,9 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('combined'));
 app.use(apiLimiter);
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'API principal activa' });
+});
 app.get('/api/noticias', async (req, res) => {
   try {
     const response = await fetch('https://www.infobae.com/feeds/rss/america/peru/');
