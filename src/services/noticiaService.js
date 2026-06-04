@@ -7,11 +7,6 @@ const KEYWORDS = {
 
 const LIMA_PALABRAS = ['lima','callao','miraflores','surco','ate','comas','chorrillos'];
 
-const PROXIES = [
-  'https://thingproxy.freeboard.io/fetch/',
-  'https://api.codetabs.com/v1/proxy?quest='
-];
-
 function parsear(text) {
   const xml = new DOMParser().parseFromString(text, 'text/xml');
   const items = Array.from(xml.querySelectorAll('item'));
@@ -31,18 +26,12 @@ function parsear(text) {
 }
 
 export async function getNoticias() {
-  const RSS = 'https://rpp.pe/rss/ultimas-noticias.xml';
-  for (const proxy of PROXIES) {
-    try {
-      const url = proxy + encodeURIComponent(RSS);
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      const text = await res.text();
-      const noticias = parsear(text);
-      if (noticias.length > 0) return noticias;
-    } catch {
-      continue;
-    }
+  try {
+    const res = await fetch('https://probaestado1.onrender.com/api/noticias');
+    if (!res.ok) return [];
+    const text = await res.text();
+    return parsear(text);
+  } catch {
+    return [];
   }
-  return [];
 }

@@ -3,16 +3,14 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-// Rutas corregidas quitando el prefijo duplicado src/
 import authRoutes from './routes/auth.routes.js';
 import reportRoutes from './routes/report.routes.js';
 
 const app = express();
 
-// Configuración de seguridad para limitar peticiones abuso (Rate Limit)
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 120, // Máximo 120 peticiones por ventana
+  windowMs: 15 * 60 * 1000,
+  max: 120,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -21,7 +19,6 @@ const apiLimiter = rateLimit({
   }
 });
 
-// Middlewares globales de seguridad y optimización
 app.use(helmet());
 app.use(cors({
   origin: true,
@@ -32,23 +29,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('combined'));
 app.use(apiLimiter);
 
-// Ruta base de prueba
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'API principal activa' });
 });
 
-// Enlace de las rutas del proyecto
 app.use('/api/auth', authRoutes);
 app.use('/api/reports', reportRoutes);
 
-// Manejo de error 404 - Ruta no encontrada
+app.get('/api/noticias', async (req, res) => {
+  try {
+    const response = await fetch('https://rpp.pe/rss/ultimas-noticias.xml');
+    const text = await response.text();
+    res.set('Content-Type', 'application/xml');
+    res.send(text);
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: 'No se pudo obtener el RSS' });
+  }
+});
+
 app.use((req, res, next) => {
   const error = new Error('Ruta no encontrada');
   error.status = 404;
   next(error);
 });
 
-// Manejo de errores global centralizado
 app.use((err, req, res, next) => {
   const statusCode = err.status || 500;
   res.status(statusCode).json({
