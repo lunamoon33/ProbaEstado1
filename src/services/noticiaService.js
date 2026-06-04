@@ -8,8 +8,8 @@ const KEYWORDS = {
 const LIMA_PALABRAS = ['lima','callao','miraflores','surco','ate','comas','chorrillos'];
 
 const PROXIES = [
-  'https://api.allorigins.win/raw?url=',
-  'https://corsproxy.io/?'
+  'https://thingproxy.freeboard.io/fetch/',
+  'https://api.codetabs.com/v1/proxy?quest='
 ];
 
 function parsear(text) {
