@@ -44,7 +44,7 @@ export function ReporteCard({ reporte }) {
             </span>
             <span className="flex items-center gap-1">
               <MapPin size={11} />
-              {reporte.lat.toFixed(3)}, {reporte.lng.toFixed(3)}
+              {(reporte.lat?.toFixed(3) ?? "---")}, {(reporte.lng?.toFixed(3) ?? "---")}
             </span>
           </div>
           <span className="text-xs text-civic-muted">{fecha}</span>
