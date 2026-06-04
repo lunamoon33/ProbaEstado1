@@ -92,7 +92,3 @@ export const getReportById = async (req, res, next) => {
   }
 };
 EOF
-
-git add backend/src/controllers/report.controller.js
-git commit -m "fix: controller limpio sin createdBy ni errores de sintaxis"
-git push
