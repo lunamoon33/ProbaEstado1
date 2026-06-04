@@ -1,8 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js';
-import { analyzeReport } from './aiService.js';
-import { registerHashInBlockchain } from './blockchainService.js';
-import Report from '../models/report.model.js'; // ajusta la ruta si es diferente
-import crypto from 'crypto';
+import axios from 'axios';
+import { discordProxyAgent } from '../agents/agentRegistry.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,7 +13,7 @@ const client = new Client({
   ]
 });
 
-client.once('ready', () => {
+client.once('clientReady', () => {
   console.log(`🚀 Proxy Completo Activo: IA + Blockchain. Bot: ${client.user.tag}`);
 });
 
@@ -26,61 +24,63 @@ client.on('messageCreate', async (message) => {
     return message.reply('pong');
   }
 
+  // Comando integrado: !reportar Título | Descripción
   if (message.content.startsWith('!reportar ')) {
+    console.log('[DISCORD] Mensaje original:', message.content);
+
     const args = message.content.slice(10).trim();
     const parts = args.split('|');
     const title = parts[0]?.trim();
     const description = parts[1]?.trim();
 
+    const parserPayload = { title, description };
+    console.log('[PARSER] Objeto generado:', parserPayload);
+
     if (!title || !description) {
-      return message.reply('❌ Formato incorrecto. Usa: `!reportar Título | Descripción detallada`');
+      return message.reply('❌ Formato incorrecto. Usa: \`!reportar Título | Descripción detallada\`');
     }
 
+    // 1. Efecto de carga en Discord
     await message.channel.sendTyping();
 
     try {
-      // 1. Análisis IA
-      const analysis = await analyzeReport(title, description);
+      // 2. Ejecutar análisis del reporte con el Agente de IA (descargar adjunto y convertir a Base64)
+      const attachment = message.attachments && message.attachments.size > 0 ? message.attachments.first() : null;
+      if (!attachment) {
+        await message.reply('❌ Debes adjuntar una imagen válida al mensaje para que la IA pueda verificarla. Por favor, vuelve a enviar el comando con la imagen.');
+        return;
+      }
 
-      // 2. Hash criptográfico
-      const reportString = `${title}-${analysis.category}-${analysis.priority}`;
-      const reportHash = crypto.createHash('md5').update(reportString).digest('hex');
+      let imageBase64 = null;
+      try {
+        const response = await axios.get(attachment.url, { responseType: 'arraybuffer' });
+        imageBase64 = Buffer.from(response.data).toString('base64');
+      } catch (dlErr) {
+        console.error('Error descargando attachment desde Discord:', dlErr?.message || dlErr);
+        await message.reply('⚠️ No se pudo descargar o procesar la imagen adjunta. Intenta de nuevo o contacta al administrador.');
+        return;
+      }
 
-      // 3. Registrar en blockchain
-      const txHash = await registerHashInBlockchain(reportHash);
-
-      // 4. Guardar en MongoDB para que aparezca en el mapa
-      await Report.create({
-        title,
-        descripcion: description,
-        pseudonimo: message.author.username,
-        fuente: 'discord',
-        ia_categoria: analysis.category,
-        ia_prioridad: analysis.priority,
-        ia_resumen: analysis.summary,
-        ia_valido: true,
-        hash: reportHash,
-        blockchainHash: txHash,
-        status: 'verified',
-        created_at: new Date(),
+      const agentResponse = await discordProxyAgent.receiveDiscordMessage({
+        message: 'reporte',
+        user: {
+          id: message.author.id,
+          username: message.author.username,
+          tag: message.author.tag
+        },
+        channel: {
+          id: message.channel.id,
+          name: message.channel?.name || null
+        },
+        payload: {
+          title,
+          description,
+          imageBase64
+        }
       });
 
-      // 5. Respuesta en Discord
-      const responseMessage = [
-        `📊 **REPORTE CIUDADANO PROCESADO CON ÉXITO**`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `📌 **Título:** ${title}`,
-        `🗂️ **Categoría:** \`${analysis.category.toUpperCase()}\``,
-        `⚠️ **Prioridad:** \`${analysis.priority.toUpperCase()}\``,
-        `📝 **Resumen de IA:** ${analysis.summary}`,
-        `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
-        `⛓️ **HASH DEL REPORTE (ID):** \`${reportHash}\``,
-        `🚀 **BLOCKCHAIN TX HASH:** [\`${txHash}\`](https://tanenbaum.io)`,
-        `✅ _Registrado de forma transparente e inmutable en zkSYS Testnet._`,
-        `🗺️ _Ya visible en el mapa de ProbaEstado._`
-      ].join('\n');
-
-      await message.reply(responseMessage);
+      const replyText = agentResponse?.text || 'No se pudo procesar el reporte en este momento. Intenta de nuevo más tarde.';
+      await message.reply(replyText);
 
     } catch (error) {
       console.error('Error en el flujo del bot:', error);

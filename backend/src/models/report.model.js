@@ -26,13 +26,26 @@ const reportSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-    lat: {
+    transactionHash: {
+      type: String,
+      default: null
+    },
+    blockchainVerified: {
+      type: Boolean,
+      default: false
+    },
+    registeredAt: {
+      type: Date,
+      default: null
+    },
+    blockNumber: {
       type: Number,
       default: null
     },
-    lng: {
-      type: Number,
-      default: null
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   {

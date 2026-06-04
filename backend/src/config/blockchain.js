@@ -21,7 +21,9 @@ export const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
 
 const reportAbi = [
   'function registerReportHash(string memory _hash) public',
-  'function verifyReportHash(string memory _hash) public view returns (bool, uint256)'
+  'function verifyReportHash(string memory _hash) public view returns (bool, uint256)',
+  'function getReport(string memory _hash) public view returns (string memory reportHash, address registrant, uint256 timestamp)',
+  'event ReportRegistered(address indexed registrant, string reportHash, uint256 timestamp)'
 ];
 
 export const reportContract = new ethers.Contract(CONTRACT_ADDRESS, reportAbi, wallet);

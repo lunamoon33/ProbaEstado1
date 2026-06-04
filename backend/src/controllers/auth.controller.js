@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model.js';
+import auditService from '../services/auditService.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = '24h';
@@ -46,6 +47,22 @@ export const register = async (req, res, next) => {
       role: role || 'citizen'
     });
 
+    try {
+      await auditService.logEvent({
+        userId: user._id,
+        action: 'REGISTER',
+        description: 'User registered successfully',
+        ip: req.ip || req.headers['x-forwarded-for'] || null,
+        metadata: {
+          email: user.email,
+          role: user.role
+        },
+        status: 'success'
+      });
+    } catch (auditError) {
+      console.error('[AUDIT] REGISTER log failed:', auditError?.message || auditError);
+    }
+
     return res.status(201).json({
       status: 'success',
       message: 'Usuario registrado correctamente',
@@ -83,6 +100,21 @@ export const login = async (req, res, next) => {
 
     const token = createToken(user);
 
+    try {
+      await auditService.logEvent({
+        userId: user._id,
+        action: 'LOGIN',
+        description: 'User login successful',
+        ip: req.ip || req.headers['x-forwarded-for'] || null,
+        metadata: {
+          email: user.email
+        },
+        status: 'success'
+      });
+    } catch (auditError) {
+      console.error('[AUDIT] LOGIN log failed:', auditError?.message || auditError);
+    }
+
     return res.status(200).json({
       status: 'success',
       token,
@@ -110,4 +142,30 @@ export const profile = async (req, res) => {
       role: req.user.role
     }
   });
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    try {
+      await auditService.logEvent({
+        userId: req.user?.id || null,
+        action: 'LOGOUT',
+        description: 'User logged out',
+        ip: req.ip || req.headers['x-forwarded-for'] || null,
+        metadata: {
+          email: req.user?.email || null
+        },
+        status: 'success'
+      });
+    } catch (auditError) {
+      console.error('[AUDIT] LOGOUT log failed:', auditError?.message || auditError);
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Logout successful'
+    });
+  } catch (error) {
+    next(error);
+  }
 };
