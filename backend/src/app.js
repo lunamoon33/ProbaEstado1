@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 });
 app.get('/api/noticias', async (req, res) => {
   try {
-    const response = await fetch('https://www.infobae.com/feeds/rss/america/peru/');
+    const response = await fetch('https://elcomercio.pe/arcio/rss/');
     const text = await response.text();
     res.set('Content-Type', 'application/xml');
     res.send(text);
