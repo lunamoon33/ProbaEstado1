@@ -34,10 +34,15 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('combined'));
 app.use(apiLimiter);
-
-// Ruta base de prueba
-app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: 'API principal activa' });
+app.get('/api/noticias', async (req, res) => {
+  try {
+    const response = await fetch('https://rpp.pe/rss/ultimas-noticias.xml');
+    const text = await response.text();
+    res.set('Content-Type', 'application/xml');
+    res.send(text);
+  } catch (error) {
+    res.status(500).json({ error: 'No se pudo obtener noticias' });
+  }
 });
 
 // Enlace de las rutas del proyecto
