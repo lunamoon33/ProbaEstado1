@@ -20,10 +20,7 @@ const apiLimiter = rateLimit({
 });
 
 app.use(helmet());
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('combined'));
@@ -38,12 +35,7 @@ app.use('/api/reports', reportRoutes);
 
 app.get('/api/noticias', async (req, res) => {
   try {
-    const response = await fetch('https://rpp.pe/rss/ultimas-noticias.xml', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; RSS Reader)',
-        'Accept': 'application/rss+xml, application/xml, text/xml'
-      }
-    });
+    const response = await fetch('https://elcomercio.pe/arcio/rss/');
     const text = await response.text();
     res.set('Content-Type', 'application/xml');
     res.send(text);
