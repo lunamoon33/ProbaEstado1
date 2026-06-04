@@ -36,7 +36,7 @@ app.use(morgan('combined'));
 app.use(apiLimiter);
 app.get('/api/noticias', async (req, res) => {
   try {
-    curl "https://www.infobae.com/feeds/rss/america/peru/" | head -20
+    const response = await fetch('https://www.infobae.com/feeds/rss/america/peru/');
     const text = await response.text();
     res.set('Content-Type', 'application/xml');
     res.send(text);
