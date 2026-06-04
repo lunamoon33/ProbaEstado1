@@ -72,7 +72,7 @@ export const createReport = async (req, res, next) => {
 
 export const getAllReports = async (req, res, next) => {
   try {
-    const reports = await Report.find()await Report.find().sort({ createdAt: -1 });;
+    const reports = await Report.find().sort({ createdAt: -1 });
     return res.status(200).json({ status: 'success', data: reports });
   } catch (error) {
     next(error);
