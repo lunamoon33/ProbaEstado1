@@ -38,7 +38,12 @@ app.use('/api/reports', reportRoutes);
 
 app.get('/api/noticias', async (req, res) => {
   try {
-    const response = await fetch('https://rpp.pe/rss/ultimas-noticias.xml');
+    const response = await fetch('https://rpp.pe/rss/ultimas-noticias.xml', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; RSS Reader)',
+        'Accept': 'application/rss+xml, application/xml, text/xml'
+      }
+    });
     const text = await response.text();
     res.set('Content-Type', 'application/xml');
     res.send(text);
