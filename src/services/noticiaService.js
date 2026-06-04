@@ -1,3 +1,4 @@
+cat > src/services/noticiaService.js << 'EOF'
 const KEYWORDS = {
   accidente: ['accidente','choque','atropell','volcó','colisión'],
   incendio: ['incendio','llamas','fuego','bomberos'],
@@ -12,14 +13,9 @@ const PROXIES = [
   'https://corsproxy.io/?'
 ];
 
-export async function getNoticias(proxyIdx = 0) {
-  const RSS = 'https://rpp.pe/rss/ultimas-noticias.xml';
-  const url = PROXIES[proxyIdx] + encodeURIComponent(RSS);
-  const res = await fetch(url);
-  const text = await res.text();
+function parsear(text) {
   const xml = new DOMParser().parseFromString(text, 'text/xml');
   const items = Array.from(xml.querySelectorAll('item'));
-
   return items.map(item => {
     const titulo = item.querySelector('title')?.textContent || '';
     const desc = item.querySelector('description')?.textContent?.replace(/<[^>]+>/g,'') || '';
@@ -34,3 +30,21 @@ export async function getNoticias(proxyIdx = 0) {
     return { titulo, desc, link, pubDate, cat };
   }).filter(Boolean);
 }
+
+export async function getNoticias() {
+  const RSS = 'https://rpp.pe/rss/ultimas-noticias.xml';
+  for (const proxy of PROXIES) {
+    try {
+      const url = proxy + encodeURIComponent(RSS);
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const text = await res.text();
+      const noticias = parsear(text);
+      if (noticias.length > 0) return noticias;
+    } catch {
+      continue;
+    }
+  }
+  return [];
+}
+EOF
