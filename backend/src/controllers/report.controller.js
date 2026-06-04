@@ -1,4 +1,3 @@
-cat > backend/src/controllers/report.controller.js << 'EOF'
 import { createHash } from 'crypto';
 import Report from '../models/report.model.js';
 import { analyzeReport } from '../services/aiService.js';
@@ -91,4 +90,3 @@ export const getReportById = async (req, res, next) => {
     next(error);
   }
 };
-EOF
