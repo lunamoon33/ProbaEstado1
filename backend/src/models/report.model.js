@@ -25,20 +25,19 @@ const reportSchema = new mongoose.Schema(
     blockchainHash: {
       type: String,
       default: null
+    },
+    lat: {
+      type: Number,
+      default: null
+    },
+    lng: {
+      type: Number,
+      default: null
     }
   },
   {
     timestamps: { createdAt: true, updatedAt: false }
- },
-  
-  lat: {
-  type: Number,
-  default: null
-},
-lng: {
-  type: Number,
-  default: null
-}
+  }
 );
 
 const Report = mongoose.model('Report', reportSchema);
