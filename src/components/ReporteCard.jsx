@@ -33,14 +33,14 @@ export function ReporteCard({ reporte }) {
 
       <div className="p-4">
         <p className="text-sm text-civic-text leading-snug line-clamp-2 mb-3">
-          {reporte.descripcion}
+          {{reporte.descripcion || reporte.description}}
         </p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-xs text-civic-muted">
             <span className="flex items-center gap-1">
               <Brain size={11} />
-              {reporte.ia_confianza}%
+             {reporte.ia_confianza ?? "—"}%
             </span>
             <span className="flex items-center gap-1">
               <MapPin size={11} />
@@ -52,7 +52,7 @@ export function ReporteCard({ reporte }) {
 
         <div className="mt-3 pt-3 border-t border-civic-border flex items-center justify-between">
           <code className="text-xs text-civic-accent/70 font-mono">
-            {reporte.hash.slice(0, 14)}...
+            {(reporte.hash || reporte.blockchainHash || "pending...")?.slice(0, 14)}...
           </code>
           <ExternalLink size={12} className="text-civic-muted group-hover:text-civic-accent transition-colors" />
         </div>
