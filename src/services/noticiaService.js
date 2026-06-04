@@ -1,4 +1,3 @@
-cat > src/services/noticiaService.js << 'EOF'
 const KEYWORDS = {
   accidente: ['accidente','choque','atropell','volcó','colisión'],
   incendio: ['incendio','llamas','fuego','bomberos'],
@@ -47,4 +46,3 @@ export async function getNoticias() {
   }
   return [];
 }
-EOF
