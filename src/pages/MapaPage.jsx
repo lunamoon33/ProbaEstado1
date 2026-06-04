@@ -30,7 +30,7 @@ export function MapaPage() {
     ? reportes
     : reportes.filter((r) => r.ia_categoria === filtro);
 
-  const conCoordenadas = filtrados.filter(r => r.lat && r.lng);
+  const conCoordenadas = filtrados.filter(r => r.lat != null && r.lng != null && typeof r.lat === 'number' && typeof r.lng === 'number');
 
   return (
     <div className="pt-14 flex h-screen overflow-hidden">
