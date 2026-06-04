@@ -33,7 +33,7 @@ export function ReporteCard({ reporte }) {
 
       <div className="p-4">
         <p className="text-sm text-civic-text leading-snug line-clamp-2 mb-3">
-          {{reporte.descripcion || reporte.description}}
+          {reporte.descripcion || reporte.description}
         </p>
 
         <div className="flex items-center justify-between">
