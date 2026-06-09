@@ -56,7 +56,7 @@ export default class AIAgent {
 
     // Si es un reporte, construimos la estructura exacta estructurada en Markdown
     if (type === 'report') {
-      const baseExplorer = process.env.BLOCK_EXPLORER || 'https://tanenbaum.io';
+      const baseExplorer = process.env.BLOCK_EXPLORER || 'https://explorer-zk.tanenbaum.io';
       const txHash = payload?.blockchainTxHash;
       
       // Creamos el hipervínculo dinámico en Markdown hacia el explorador de bloques
