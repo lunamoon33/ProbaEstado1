@@ -100,7 +100,13 @@ const start = async () => {
 
     // Ejecutar inmediatamente al arrancar
     enviarNoticiasDiscord();
-
+// Keep-alive para Render (evita que se duerma)
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'https://probaestado1.onrender.com';
+setInterval(() => {
+  fetch(`${RENDER_URL}/`)
+    .then(() => console.log('🟢 Keep-alive ping sent'))
+    .catch(err => console.error('Keep-alive failed:', err.message));
+}, 14 * 60 * 1000);
     const shutdown = async () => {
       console.log('\nCerrando servidor y conexión a MongoDB...');
       await mongoose.disconnect();
