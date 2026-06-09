@@ -1,7 +1,7 @@
 import { reportContract, wallet } from '../config/blockchain.js';
 import auditService from './auditService.js';
 
-const BLOCK_EXPLORER = process.env.BLOCK_EXPLORER?.trim() || 'https://tanenbaum.io';
+const BLOCK_EXPLORER = process.env.BLOCK_EXPLORER?.trim() || 'https://explorer-zk.tanenbaum.io';
 
 class BlockchainService {
   constructor(contract, walletInstance, explorerUrl) {
