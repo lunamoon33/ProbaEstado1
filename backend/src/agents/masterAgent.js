@@ -97,7 +97,7 @@ export default class MasterAgent {
     }
 
     // Construcción del enlace dinámico apuntando a Tanenbaum Testnet usando la variable de entorno configurada
-    const baseExplorer = process.env.BLOCK_EXPLORER || 'https://tanenbaum.io';
+    const baseExplorer = process.env.BLOCK_EXPLORER || 'https://explorer-zk.tanenbaum.io';
     const dynamicTxUrl = blockchainResult.txHash 
       ? `[\`${baseExplorer}/tx/${blockchainResult.txHash}\`](${baseExplorer}/tx/${blockchainResult.txHash})`
       : '`El registro en blockchain falló o está pendiente.`';
